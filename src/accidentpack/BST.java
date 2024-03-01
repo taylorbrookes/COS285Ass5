@@ -7,8 +7,25 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * Creates an ArrayList of Binary Search Trees,
+ * where each BST is each state in the CSV.
+ * 
+ * Nodes have attributes:
+ * state, startTime, left, right, Lcount, Rcount.
+ * 
+ * Attributes are:
+ * String, LocalDateTime, Node, Node, int, int respectively.
+ * 
+ * Node class is kept private, but implemented some getters.
+ * 
+ * @author Taylor Brookes
+ * @version 1 March 2024
+ */
+
 public class BST {
 	/*
+	 * OUTLINE:
 	 * read reports into BST (create the class) based on start time
 	 * create one BST per state
 	 * each node in BT has 2 fields (in addition to other fields)
@@ -23,54 +40,24 @@ public class BST {
 	 * the one you are inserting becomes the right child
 	 */
 	
-	//ok
-	
-	//create an ArrayList of the roots of each state tree
-	
-	//create ArrayList
-	//check if state is in ArrayList
-		//if yes, add to stateBST
-		//if no, create new stateBST inside ArrayList
-	//
-	
-	//create ArrayList of treeRoot objects that hold
-	//the state and the BSTs of 
-	
 	/**
-	 * Creates a LocalDateTime value from a string value to be used
-	 * for comparison in sortArrayList and returns it.
-	 * @param theTime the input string to be converted to LocalDateTime
-	 * @return the LocalDateTime version of the input String
+	 * Node class. Used to make up BST. I put state in the node class
+	 * because I couldn't think of a way to only put it in the root
+	 * of the node, and this was easier than creating another ArrayList
+	 * of objects to use.
 	 */
-	public static LocalDateTime timeTryCatch(String theTime) {
-		//the most common used formatter in startTime
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		//extra formats found
-		DateTimeFormatter oneFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.nnnnnnnnn");
-		DateTimeFormatter twoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.nnnnnn");
-		//initialize because won't compile without
-		LocalDateTime outputDate;
-		try {
-			//if it's SEC with no decimal
-			outputDate = LocalDateTime.parse(theTime, formatter);
-		} catch (Exception e) {
-			try {
-				//if it's SEC.nano
-				outputDate = LocalDateTime.parse(theTime, oneFormatter);
-			} catch (Exception f) {
-				//if it's SEC.micro
-				outputDate = LocalDateTime.parse(theTime, twoFormatter);
-			}
-		}
-		return outputDate;
-	}
-	
 	private static class Node {
 		String state;
 		LocalDateTime startTime;
 		Node left, right;
+		//Lcount is never used, just have it because assignment said it was needed
 		int Lcount, Rcount;
-	        
+	       
+		/**
+		 * Node constructor
+		 * @param inTime the start time of the accident/node
+		 * @param theState the state of the accident/node
+		 */
 		public Node(LocalDateTime inTime, String theState) {
 			state = theState;
 			startTime = inTime;
@@ -78,27 +65,52 @@ public class BST {
 			Lcount = Rcount = 0;
 		}
 	}
-	 
+	
+	//create starting null root for BST
     Node root;
 
+    /**
+     * BST constructor
+     */
     public BST() {
         root = null;
     }
     
-    //used in main
+    /**
+     * The amount of reports on or after the current node's date. Used in main.
+     * @param node the current node/report/accident
+     * @return The amount of reports on or after the current node's date.
+     */
     public int Rcount(Node node) {
     	return node.Rcount;
     }
     
-    //used in main
+    /**
+     * The time of the current node. Used in main.
+     * @param node the current node/report/accident
+     * @return The time of the current node
+     */
     public LocalDateTime startTime(Node node) {
     	return node.startTime;
     }
     
+    /**
+     * adds a node to the BST.
+     * @param inTime the time of the accident
+     * @param theState the state of the accident
+     */
     public void add(LocalDateTime inTime, String theState) {
         root = insert(root, inTime, theState);
     }
 
+    /**
+     * Adds a node to the BST. If inTime is before, node goes left.
+     * Otherwise, node goes right. Recursion occurs here.
+     * @param root the current node
+     * @param inTime the time of the accident
+     * @param theState the state the accident occurred in
+     * @return the current node
+     */
     private Node insert(Node root, LocalDateTime inTime, String theState) {
         if (root == null) {
             root = new Node(inTime, theState);
@@ -116,6 +128,12 @@ public class BST {
         return root;
     }
     
+    /**
+     * Takes the CSV file in and returns an ArrayList of BSTs.
+     * @param filePath the name of the CSV file
+     * @return an ArrayList of BSTs
+     * @throws IOException
+     */
     public static ArrayList<BST> readCSV(String filePath) throws IOException {
     	//initialize tree ArrayList
     	ArrayList<BST> reportTree = new ArrayList<BST>();
@@ -147,5 +165,34 @@ public class BST {
         }
         reader.close();
 		return reportTree;
+	}
+    
+    /**
+	 * Creates a LocalDateTime value from a string value to be used
+	 * for comparison in sortArrayList and returns it.
+	 * @param theTime the input string to be converted to LocalDateTime
+	 * @return the LocalDateTime version of the input String
+	 */
+	public static LocalDateTime timeTryCatch(String theTime) {
+		//the most common used formatter in startTime
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		//extra formats found
+		DateTimeFormatter oneFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.nnnnnnnnn");
+		DateTimeFormatter twoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.nnnnnn");
+		//initialize because won't compile without
+		LocalDateTime outputDate;
+		try {
+			//if it's SEC with no decimal
+			outputDate = LocalDateTime.parse(theTime, formatter);
+		} catch (Exception e) {
+			try {
+				//if it's SEC.nano
+				outputDate = LocalDateTime.parse(theTime, oneFormatter);
+			} catch (Exception f) {
+				//if it's SEC.micro
+				outputDate = LocalDateTime.parse(theTime, twoFormatter);
+			}
+		}
+		return outputDate;
 	}
 }
