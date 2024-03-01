@@ -2,28 +2,15 @@
 package accidentpack;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.prefs.NodeChangeEvent;
 
 public class main {
 	public static void main(String[] args) throws IOException {
-		System.out.println("Hello, World!");
-		long start = System.currentTimeMillis();
-//		ArrayList<myObj> myReport = theArrayList.readCSV("accidents_small_sample.csv");
-		long end = System.currentTimeMillis();
-		System.out.printf("%05.2f seconds to read the reports\n",(double)((end - start) / 1000.0));
-		//test output to make sure it is oldest first
-//		System.out.println(myReport.get(0).getStartTime().toString());
-//		System.out.println(myReport.get(1).getStartTime().toString());
-//		System.out.println(myReport.get(2).getStartTime().toString());
-	
-		// Example binaryTree for you to use to test your methods
-        BST binaryTree = new BST();
-        binaryTree.add(12);
-        binaryTree.add(10);
-        binaryTree.add(14);
-        binaryTree.add(15);
-        binaryTree.add(9);
-        //root: 12, TL: 10, TR: 14, TRR:15, TLL: 9
-        
+		
         /*
          * command: java program5 accidents.csv
          * outputs:
@@ -36,8 +23,20 @@ public class main {
          * xx seconds to calculate this using recursive method
          */
         
-        
-		
+		long start = System.currentTimeMillis();
+		//create BST here
+		ArrayList<BST> binaryReport = BST.readCSV("accidents_small_sample.csv");
+		long end = System.currentTimeMillis();
+		System.out.printf("%05.2f seconds to read the reports\n",(double)((end - start) / 1000.0));
+		System.out.printf("Amount of states in report: %d\n",binaryReport.size());
+		Scanner myObj = new Scanner(System.in);
+		System.out.printf("Enter the state (e.g., IL): ");
+		String state = myObj.nextLine();
+		System.out.printf("Enter the date (e.g., 2022-09-08): ");
+		String storedDate = myObj.nextLine();
+		LocalDateTime date = LocalDate.parse(storedDate).atStartOfDay();
+		//need to actually implement this method like he asks instead of current implementation, because current just gives it from root instead of from input date.
+		System.out.printf("%d reports are available for IL on and after the date %s\n",binaryReport.get(3).Rcount(binaryReport.get(3).root), storedDate);
 	}
 }
 
