@@ -1,0 +1,6 @@
+I would recommend using the fields of the Node class inside the BST.java
+file because it should be much faster since these are counted while
+the BST is compiled, while a recursive method would require too many
+iterations of the BST to accomplish the same task. 
+
+The recursive method should have a base case and a recursive case.
